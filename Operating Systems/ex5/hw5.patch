@@ -1,0 +1,108 @@
+diff --git a/include/minix/callnr.h b/include/minix/callnr.h
+index 6f145cf..c3d5d07 100644
+--- a/include/minix/callnr.h
++++ b/include/minix/callnr.h
+@@ -65,6 +65,7 @@
+ #define SETGROUPS_O	  66
+ #define GETMCONTEXT       67
+ #define SETMCONTEXT       68
++#define GETINODE          69
+ 
+ /* Posix signal handling. */
+ #define SIGACTION	  71
+diff --git a/servers/vfs/Makefile b/servers/vfs/Makefile
+index b3a2031..3b6d6ce 100644
+--- a/servers/vfs/Makefile
++++ b/servers/vfs/Makefile
+@@ -7,7 +7,7 @@ SRCS=	main.c open.c read.c write.c pipe.c dmap.c \
+ 	filedes.c stadir.c protect.c time.c \
+ 	lock.c misc.c utility.c select.c table.c \
+ 	vnode.c vmnt.c request.c \
+-	tll.c comm.c worker.c coredump.c
++	tll.c comm.c worker.c coredump.c 
+ 
+ .if ${MKCOVERAGE} != "no"
+ SRCS+=  gcov.c
+diff --git a/servers/vfs/misc.c b/servers/vfs/misc.c
+index 03de68c..7a8b2ee 100644
+--- a/servers/vfs/misc.c
++++ b/servers/vfs/misc.c
+@@ -800,3 +800,4 @@ ds_event(void *arg)
+   thread_cleanup(NULL);
+   return(NULL);
+ }
++
+diff --git a/servers/vfs/proto.h b/servers/vfs/proto.h
+index b98d742..7f1d549 100644
+--- a/servers/vfs/proto.h
++++ b/servers/vfs/proto.h
+@@ -144,6 +144,7 @@ int do_svrctl(void);
+ int do_getsysinfo(void);
+ int pm_dumpcore(endpoint_t proc_e, int sig, vir_bytes exe_name);
+ void * ds_event(void *arg);
++int do_getinode(void);
+ 
+ /* mount.c */
+ int do_fsready(void);
+diff --git a/servers/vfs/stadir.c b/servers/vfs/stadir.c
+index 3d1c367..2314252 100644
+--- a/servers/vfs/stadir.c
++++ b/servers/vfs/stadir.c
+@@ -330,3 +330,44 @@ int do_lstat()
+   put_vnode(vp);
+   return(r);
+ }
++/*===========================================================================*
++ *				do_getinode					     *
++ *===========================================================================*/
++int do_getinode(void)
++{
++/* Perform the stat(name, buf) system call. */
++  struct vnode *vp;
++  struct vmnt *vmp;
++  char fullpath[PATH_MAX];
++  struct lookup resolve;
++  vir_bytes vname1, statbuf;
++  size_t vname1_length;
++int kati=0;
++  vname1 = (vir_bytes) job_m_in.name1;
++  vname1_length = (size_t) job_m_in.name1_length;
++  statbuf = (vir_bytes) job_m_in.m1_p2;
++
++  lookup_init(&resolve, fullpath, PATH_NOFLAGS, &vmp, &vp);
++  resolve.l_vmnt_lock = VMNT_READ;
++  resolve.l_vnode_lock = VNODE_READ;
++
++
++  if (fetch_name(vname1, vname1_length, fullpath) != OK){
++	printf("inode: -\n");
++	return(0);
++	}
++  if ((vp = eat_path(&resolve, fp)) == NULL){
++	printf("inode: -\n");
++	return(0);
++	}
++  
++  unlock_vnode(vp);
++  unlock_vmnt(vmp);
++
++  put_vnode(vp);
++  kati=vp->v_inode_nr;
++ if (kati != 0 ) {
++	printf ("inode: %d\n", kati);
++	}
++  return 0;
++}
+diff --git a/servers/vfs/table.c b/servers/vfs/table.c
+index 8371e34..83037af 100644
+--- a/servers/vfs/table.c
++++ b/servers/vfs/table.c
+@@ -84,7 +84,7 @@ int (*call_vec[])(void) = {
+ 	do_fstat, 	/* 66 = fstat - badly numbered, being phased out */
+ 	do_lstat,	/* 67 = lstat - badly numbered, being phased out */
+ 	no_sys,		/* 68 = unused	*/
+-	no_sys,		/* 69 = unused  */
++	do_getinode,	/* 69 = inode  */
+ 	no_sys,		/* 70 = unused  */
+ 	no_sys,		/* 71 = (sigaction) */
+ 	no_sys,		/* 72 = (sigsuspend) */
