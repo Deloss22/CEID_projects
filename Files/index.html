@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Coffee S.A. Delivery</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel='shortcut icon' type='image/x-icon' href='favicon.png' />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<style>
+		/* Button and sidebar stylings */
+			.btn {
+    		background-color: none;
+    		border: 0.2px solid white;
+    		color: white;
+				text-align: center;
+				width: 140px;
+    		font-size: 12px;
+    		cursor: pointer;
+				margin-left: 0px;
+				padding: 0px;
+			}
+			.btnlogsin {
+    		background-color: none;
+    		border: 0.2px solid white;
+    		text-decoration-color: grey;
+				text-align: center;
+				width: 140px;
+    		font-size: 12px;
+    		cursor: pointer;
+				margin-left: 16px;
+				padding: 0px;
+			}
+			.btnres {
+				background-color: none;
+				border: 0.2px solid white;
+				color: white;
+				text-align: center;
+				width: 140px;
+				font-size: 12px;
+				cursor: pointer;
+				margin-left: 10px;
+				padding: 0px;
+			}
+
+			.sidebar {
+		    height: 100%;
+		    width: 0;
+		    position: fixed;
+		    z-index: 1;
+		    top: 0;
+		    left: 0;
+		    background-color: #111;
+		    overflow-x: hidden;
+		    transition: 0.5s;
+		    padding-top: 60px;
+			}
+
+			.sidebar a {
+			    padding: 8px 8px 8px 32px;
+			    text-decoration: none;
+			    font-size: 25px;
+			    color: #818181;
+			    display: block;
+					border: none;
+			    transition: 0.3s;
+			}
+
+			.sidebar a:hover {
+			    color: #f1f1f1;
+			}
+
+			.sidebar .closebtn {
+			    position: absolute;
+			    top: 0;
+			    right: 25px;
+			    font-size: 36px;
+			    margin-left: 50px;
+			}
+
+			.openbtn {
+				position: absolute;
+				left: 5px;
+				top: 5px;
+				background-color: none;
+    		border: 0.2px solid white;
+    		color: white;
+				text-align: center;
+				width: 140px;
+    		font-size: 12px;
+    		cursor: pointer;
+				margin-left: 0px;
+				padding: 0px;
+			}
+
+			.openbtn:hover {
+			    background-color: #444;
+			}
+
+			#main {
+			    transition: margin-left .5s;
+			    padding: 16px;
+			}
+			@media screen and (max-height: 450px) {
+		    .sidebar {padding-top: 15px;}
+		    .sidebar a {font-size: 18px;}
+			}
+/* Darker background on mouse-over */
+			.btn:hover {
+    		opacity: 0.5;
+			}
+			.btnlogsin:hover {
+				opacity: 0.5;
+			}
+			.btnres:hover {
+				opacity: 0.5;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<div id="sidebar">
+					<button class="openbtn" onclick="openNav()"><i class="fa fa-bars"></i>Menu</button>
+				</div>
+				<div id="mySidebar" class="sidebar">
+					<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+					<a href="deliveryconn.php">Distributor</a>
+					<a href="managerconn.php">Manager</a>
+				</div>
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="fa fa-coffee fa-2x" aria-hidden="true"></span>
+						</div>
+						<div class="content">
+							<div class="inner">
+								<h1>Coffee S.A.</h1>
+								<p>The best place to order coffee and more...</p>
+							</div>
+						</div>
+						<nav>
+								<button class="btn" onclick="window.location.href='#signup'"><i class="fa fa-user-plus"></i>Εγγραφή</button>
+								<button class="btn" onclick="window.location.href='#login'"><i class="fa fa-sign-in"></i>Είσοδος</button>
+								<button class="btn" onclick="window.location.href='#locabout'"><i class="fa fa-info-circle"></i>Για εμάς</button>
+								<button class="btn" onclick="window.location.href='#contact'"><i class="fa fa-comment"></i>Επικοινωνία</button>
+						</nav>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- signup -->
+							<article id="signup">
+								<h2 class="major">Εγγραφή</h2>
+								<span class="image main"><img src="images/pic01.jpg" alt="" /></span>
+								<p>Κάντε εγγραφή, παραγγείλετε online και τα υπόλοιπα αφήστε τα πάνω μας!</p>
+								<form method="POST" action="/signup.php">
+									<div class="fields">
+										<div class="field">
+											<label for="email">Email</label>
+											<input type="email" name="semail" id="semail" required="required"></input>
+										</div>
+										<div class="field">
+											<label for="ps">Password</label>
+											<input type="password" name="spswd" id="spswd" required="required"></input>
+										</div>
+										<div class="field">
+											<label for="num">Tel. Number</label>
+											<input type="text" name="steln" id="steln" required="required"></input>
+										</div>
+									</div>
+									<ul class="actions">
+										<button type="submit" class="btnlogsin"><i class="fa fa-user-plus"></i>Εγγραφή</button>
+								    <button type="reset" class="btnres"><i class="fa fa-eraser"></i>Επαναφορά</button>
+									</ul>
+								</form>
+							</article>
+
+						<!-- login -->
+							<article id="login">
+								<h2 class="major">Είσοδος</h2>
+								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
+								<p> Κάντε login και παραγγείλετε απολαυστικούς καφέδες και χειροποίητα snacks.</p>
+								<form method="post" action="connect.php">
+								  <div class="fields">
+								    <div class="field half">
+								      <label for="num">Tel. Number</label>
+								      <input type="text" name="lteln" id="lteln" required="required"></input>
+								    </div>
+								    <div class="field half">
+								      <label for="ps">Password</label>
+								      <input type="password" name="lpswd" id="lpswd" required="required"></input>
+								    </div>
+								  </div>
+								  <ul class="actions">
+								    <button type="submit" class="btnlogsin"><i class="fa fa-sign-in"></i>Είσοδος</button>
+								    <button type="reset" class="btnres"><i class="fa fa-eraser"></i>Επαναφορά</button>
+								  </ul>
+								</form>
+							</article>
+
+						<!-- locate/about -->
+							<article id="locabout">
+								<h2 class="major">Για εμάς</h2>
+								<span class="image main"><img src="images/pic03.jpg" alt="" /></span>
+								<p>Established in Patras. 2018.</p>
+								<h2 class="major">Τα καταστήματα μας</h2>
+								<div id="storelocation" style="width:100%;height:400px; border-radius: 5px;"></div>
+							</article>
+
+						<!-- contact -->
+							<article id="contact">
+								<h2 class="major">Επικοινωνία</h2>
+								<form method="post" action="#">
+									<div class="fields">
+										<div class="field half">
+											<label for="name">Name</label>
+											<input type="text" name="Name" id="name" />
+										</div>
+										<div class="field half">
+											<label for="email">Email</label>
+											<input type="text" name="Email" id="email" />
+										</div>
+										<div class="field">
+											<label for="message">Message</label>
+											<textarea name="message" id="Message" rows="4"></textarea>
+										</div>
+									</div>
+									<ul class="actions">
+										<button type="submit" class="btnlogsin"><i class="fa fa-share-square"></i>Αποστολή</button>
+										<button type="reset" class="btnres"><i class="fa fa-eraser"></i>Επαναφορά</button>
+									</ul>
+								</form>
+								<ul class="icons">
+									<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</article>
+
+					</div>
+			<!--div for wrapper -->
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script>
+				function openNav() {
+				    document.getElementById("mySidebar").style.width = "250px";
+				    document.getElementById("sidebar").style.marginLeft = "250px";
+				}
+
+				function closeNav() {
+				    document.getElementById("mySidebar").style.width = "0";
+				    document.getElementById("sidebar").style.marginLeft= "0";
+				}
+			</script>
+			<script>
+			// map for stores
+			function myMap() {
+				var myCenter = new google.maps.LatLng(38.238759, 21.743198);
+				var store1 = new google.maps.LatLng(38.229636, 21.733848);
+				var store2 = new google.maps.LatLng(38.256016, 21.742959);
+				var store3 = new google.maps.LatLng(38.246877, 21.735396);
+				var store4 = new google.maps.LatLng(38.238927, 21.728368);
+				var mapCanvas = document.getElementById("storelocation");
+				var mapOptions = {center: myCenter, zoom: 12};
+				var map = new google.maps.Map(mapCanvas, mapOptions);
+				var marker1 = new google.maps.Marker({position:store1});
+				var marker2 = new google.maps.Marker({position:store2});
+				var marker3 = new google.maps.Marker({position:store3});
+				var marker4 = new google.maps.Marker({position:store4});
+				marker1.setMap(map);
+				marker2.setMap(map);
+				marker3.setMap(map);
+				marker4.setMap(map);
+			}
+			</script>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHsh-ig63fRFRSwh17CpmRE_TT_6tG4HA&callback=myMap"></script>
+	</body>
+</html>
