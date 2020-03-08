@@ -1,0 +1,164 @@
+diff --git a/include/minix/callnr.h b/include/minix/callnr.h
+index 6f145cf..db6972b 100644
+--- a/include/minix/callnr.h
++++ b/include/minix/callnr.h
+@@ -65,7 +65,8 @@
+ #define SETGROUPS_O	  66
+ #define GETMCONTEXT       67
+ #define SETMCONTEXT       68
+-
++#define PRINTPR           69
++#define GIVEPID	          70
+ /* Posix signal handling. */
+ #define SIGACTION	  71
+ #define SIGSUSPEND	  72
+diff --git a/servers/pm/Makefile b/servers/pm/Makefile
+index 9065432..252a460 100644
+--- a/servers/pm/Makefile
++++ b/servers/pm/Makefile
+@@ -4,7 +4,7 @@
+ PROG=	pm
+ SRCS=	main.c forkexit.c break.c exec.c time.c alarm.c \
+ 	signal.c utility.c table.c getset.c misc.c \
+-	profile.c schedule.c
++	profile.c schedule.c printpr.c givepid.c 
+ 
+ .if ${USE_MCONTEXT} != "no"
+ SRCS+= mcontext.c
+diff --git a/servers/pm/forkexit.c b/servers/pm/forkexit.c
+index 6e01f41..c506d3e 100644
+--- a/servers/pm/forkexit.c
++++ b/servers/pm/forkexit.c
+@@ -131,6 +131,7 @@ int do_fork()
+   /* Do not reply until VFS is ready to process the fork
+   * request
+   */
++  printf("process forked\n");
+   return SUSPEND;
+ }
+ 
+@@ -223,7 +224,7 @@ int do_srv_fork()
+ 
+   /* Wakeup the newly created process */
+   setreply(rmc-mproc, OK);
+-
++  printf("process forked\n");
+   return rmc->mp_pid;
+ }
+ 
+diff --git a/servers/pm/givepid.c b/servers/pm/givepid.c
+new file mode 100644
+index 0000000..1ef6aea
+--- /dev/null
++++ b/servers/pm/givepid.c
+@@ -0,0 +1,24 @@
++#include "pm.h"
++#include "mproc.h"
++#include <sys/types.h>
++#include <stdio.h>
++#include <stdlib.h>
++
++
++#include <unistd.h>
++
++
++int do_givepid(int pid)
++{	
++	int i=0;
++	int find=0;
++	do {
++		if (mproc[i].mp_pid == pid) {
++		find=1;
++		}
++
++			i++;
++		} while (i<=NR_PROCS);
++	pid = find;
++	return pid;
++}
+diff --git a/servers/pm/printpr.c b/servers/pm/printpr.c
+new file mode 100644
+index 0000000..7e4bfd6
+--- /dev/null
++++ b/servers/pm/printpr.c
+@@ -0,0 +1,35 @@
++#include <stdio.h>
++#include <unistd.h>
++#include "pm.h"
++#include "mproc.h"
++#include <sys/types.h>
++
++
++int do_printpr() {
++
++struct mproc *mp;
++int procs;
++clock_t utime, stime;
++int i = 0;
++
++procs = 0;
++
++
++do 
++{
++	mp = &mproc[i];
++	if ((mp->mp_flags & IN_USE) != 0)
++	{
++			procs++;
++		utime += mproc[i].mp_child_utime;
++		stime += mproc[i].mp_child_stime;
++	}
++		i++;
++} while (i<NR_PROCS); 
++
++printf("processes -> %d\n", procs);
++printf("user time -> %2d\n", utime);
++printf("system time -> %2d\n", stime);
++
++return 0;
++}
+diff --git a/servers/pm/proto.h b/servers/pm/proto.h
+index 00646d3..15f26d3 100644
+--- a/servers/pm/proto.h
++++ b/servers/pm/proto.h
+@@ -56,6 +56,8 @@ int do_getepinfo(void);
+ int do_getepinfo_o(void);
+ int do_svrctl(void);
+ int do_getsetpriority(void);
++int do_printpr(void);
++int do_givepid(int var);
+ 
+ /* schedule.c */
+ void sched_init(void);
+diff --git a/servers/pm/table.c b/servers/pm/table.c
+index 5051cec..9105062 100644
+--- a/servers/pm/table.c
++++ b/servers/pm/table.c
+@@ -80,8 +80,8 @@ int (*call_vec[])(void) = {
+ 	do_set, 	/* 66 = setgroups */
+ 	do_getmcontext,	/* 67 = getmcontext */
+ 	do_setmcontext,	/* 68 = setmcontext */
+-	no_sys,		/* 69 = unused	*/
+-	no_sys,		/* 70 = unused	*/
++	do_printpr,	/* 69 = printprocess */
++	do_givepid,	/* 70 = givepid	*/
+ 	do_sigaction,	/* 71 = sigaction   */
+ 	do_sigsuspend,	/* 72 = sigsuspend  */
+ 	do_sigpending,	/* 73 = sigpending  */
+diff --git a/servers/vfs/open.c b/servers/vfs/open.c
+index fc72695..6f39541 100644
+--- a/servers/vfs/open.c
++++ b/servers/vfs/open.c
+@@ -607,8 +607,12 @@ int do_mkdir()
+   } else if ((r = forbidden(fp, vp, W_BIT|X_BIT)) == OK) {
+ 	r = req_mkdir(vp->v_fs_e, vp->v_inode_nr, fullpath, fp->fp_effuid,
+ 		      fp->fp_effgid, bits);
++		      if (r == OK) {
++			 printf("newdir: %s %o\n", fullpath, dirmode);
+   }
+ 
++  
++     }
+   unlock_vnode(vp);
+   unlock_vmnt(vmp);
+   put_vnode(vp);
